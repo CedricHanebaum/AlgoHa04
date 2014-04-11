@@ -41,10 +41,7 @@ public class BTreeNode {
 			
 			// if the current node is the root node a overflow might happen.
 			if (this.isRoot() && this.isFull()) {
-				BTreeNode root = new BTreeNode();
-				root.childNodes.add(this);
-				root.split(0);
-				wrapper.setRoot(root);
+				this.handleRootOverflow();
 				return 2;
 			}
 			
@@ -65,7 +62,7 @@ public class BTreeNode {
 	}
 
 	/**
-	 * Splits the node at position pos of the node in to equally sized child nodes. The median element of the old child node gets inserted into the node.
+	 * Splits the node at position pos of the node in two equally sized child nodes. The median element of the old child node gets inserted into the node.
 	 * @param pos the position of the node to be splitted
 	 * @return 1 if splitting was possible without adding a new level to the tree, if not 2.
 	 */
@@ -113,13 +110,17 @@ public class BTreeNode {
 		
 		// if the current node is the root node a overflow might happen.
 		if (this.isFull() && isRoot()) {
-			BTreeNode root = new BTreeNode();
-			root.childNodes.add(this);
-			root.split(0);
-			wrapper.setRoot(root);
+			this.handleRootOverflow();
 			return 2;
 		}
 		return 1;
+	}
+	
+	private void handleRootOverflow(){
+		BTreeNode root = new BTreeNode();
+		root.childNodes.add(this);
+		root.split(0);
+		wrapper.setRoot(root);
 	}
 
 	/**
